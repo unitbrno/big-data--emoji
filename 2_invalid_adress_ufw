@@ -1,0 +1,2 @@
+with open('fwdata.csv') as data:
+    

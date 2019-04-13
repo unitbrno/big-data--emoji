@@ -1,0 +1,67 @@
+fun log_sanitizer:
+  Extrahovanie relevantných informácií z logov
+  ufw : Time, SRC, DST, SRCP, DSTP, PROTO
+  win-sec/sysmon - msg, id, recId, prov_name, machine_name, time userid
+
+fun invalid_exec:
+  vyhľadávanie podozrivých .exe súborov/procesov, podozrivé umiestnenie, nesystémové .exe, podozrivý názov 
+  môžeme vybudovať databázu (whitelist) legitímnych spustiteľných súborov
+  pri anomálii zistiť jej čas, a hľadať, čo bolo spustené v danom čase
+  pozrieť parent process + prípadne backtrackovať "rekurzívne"
+  - z časových dôvodov neimplementované
+
+fun invalid_address_ufw_private:
+  extrahovať riadky s privátnymi adresami (10.0.0.0, 172.16.0.0-172.31.255.255, 192.168.0.0)
+  skontrolovat či ich máme na lokálnej sieti
+
+fun invalid_port_ufw:
+  vytvoriť blacklist portov (netbios a pod.)
+  vyhľadať riadky kde sa vyskytujú
+
+fun scan_detector:
+  detekovať peak-y v prenose paketov
+  analyzovať závislosti (adresy, porty)
+  počet lokálnych hostov na jedného remote hosta
+  hľadať postupnosti adries/portov
+
+fun bruteforce_detect:
+  počet pokusov na prihlásenie na služby
+
+fun invalid_address_host:
+  pripojenia k invalidným adresám zo strojov (detekované vyššie)
+  použiť najmä po tom, ako sme odhalili komunikáciu na fw, na zistenie
+  komunikujúceho procesu
+
+fun shutdowns:
+  vyhľadať riadky s inicializáciou vypnutia/reštartovania/pádu systému
+  analyzovať, aký proces to spustil/spôsobil
+  prípadné časové zhody na viacerých strojoch
+
+fun log_tamper:
+  vyhľadat riadky indukujúce zmazanie, editáciu logov
+
+fun file_create_date_tamper:
+  vyhľadat riadky indikujuce zmeny v čase vytvorenia suborov
+  pozrieť volajúci proces/user a porovnať s whitelistom
+
+fun unwanted_domains:
+  vyhľadať riadky s DNS, a vytvorenie spojeni s "typickými" malicious doménami
+  + vyskúšať a analyzovať spojenie v chránenom prostredí
+
+fun offsec_tools:
+  vyhľadať riadky obsahujúce známe offsec_tools (nmap, hydra)
+
+fun privilege_escalation:
+  vyhľadat riadky 'Special privileges assigned'
+  analyzovať volajúceho subjektu
+
+fun hash_match:
+  skontrolovať hash práve spusteného programu a analyzovať pomocou virustotal api 
+
+fun signature_validity:
+  ked je program podpísaný, porovnáme vlastníka s (vytvoreným) whitelistom
+
+fun user_behaviour:
+  detekovanie anomálií v aktivite používateľov
+  neobvyklé časy prihlásenia, komunikácie
+  porušenie (ustanovenej) bezpečnostnej politiky (prihlásenie z domu...)

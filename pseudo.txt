@@ -1,0 +1,72 @@
+fun log_sanitizer:
+   pouzitie sql dotazov na extrahovanie relevantnych informaci/ stlpcov
+  ufw : Time, SRC, DST, SRCP, DSTP, PROTO
+  win-sec/sysmon - msg, id, recId, prov_name, machine_name, time userid
+
+
+fun invalid_exec:
+  vyhladavanie podozryvych .exesuborov/ procesov, lokacia, nesystemove exe, nazov,
+  mozeme mat databazu legitimnych a porovnat
+  extrahovat pri podozrivych cas
+  pozriet parent proces + pripadne backtrackovat "rekurzivne"
+
+fun invalid_address_ufw_private:
+  extrahovat riadky s  Private adresy (10.0.0.0, 172.16.0.0-172.31.255.255, 192.168.0.0)
+  skontrolovat ci ich mame na lokalnej sieti -- mal by podporovat zadavanie pomocou ip/netmask
+  ak nie, zahlasit
+
+fun invalid_port_ufw:
+    vyhladat riadky s blacklistovanymi portami (netbios, ..)
+
+fun scan_detector:
+      detekovat peak-y v prenosu paketov
+      analyzovat zavislosti(adresy, porty)
+      pocet lokalnych hostov na jedneho remote hosta
+      hladat postupnosti adres/ portov
+
+fun bruteforce_detect:
+    pocet pokusov na nadviazanie spojenia na jeden port/ sluzbu
+
+fun invalid_address_host:
+  pripojenia k invalidnim adresam zo strojov(PC)
+  // hlavne pouzit po tom ako sme odhalili komunikaciu na ufw, na zistenie
+  //volajuceho procesu
+
+fun shutdowns:
+    vyhladat riadky s inicializaciou vypnutia/ restartovania
+    analyzovat aky proces to spustil
+    pripadne casove shody na viacerych strojoch
+
+
+fun log_tamper:
+      vyhladat riadky indukujuce zmazanie, editaciu logov
+
+fun file_create_date_tamper:
+  vyhladat riadky indikujuce zmeny v casu vytvorenia suborov
+  pozriet volajuci proces/user a porovnat s whitelistom
+
+
+fun unwanted_domains:
+    vyhladat riadky s DNS, a vytvorenie spojeni s
+    "typyckymi" malicious adresami
+    + vyskusat a analizovat spojenie v chranenom prostredi
+
+fun offsec_tools:
+   vyhladat riadky obsahujuce zname offsec_tools
+
+fun privilege_escalation:
+  vyhladat riadky 'Special privileges assigned'
+  analyzovat volajuceho/ subjekt
+
+fun hash_match:
+    skontrolovat hash prave spusteneho programu a analyzovat pomocou api virustotal
+
+fun signature_validity:
+  ked je program podpisany, porovname vlastnika s whitelistom
+
+
+fun user_behaviour:
+  detekovanie anomalii v aktivite pouzivatelov
+  neobvykle casi prihlasenia, komunikaci
+  porusenie bezpecnostnej politiky
+  (pracovne doby,...)
